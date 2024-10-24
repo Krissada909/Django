@@ -1,0 +1,288 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f5f7; /* ปรับพื้นหลังให้ใกล้เคียงการออกแบบ */
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px; /* จำกัดความกว้างของคอนเทนต์ */
+    margin: 0 auto; /* จัดกลางหน้าจอ */
+    padding: 20px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    color: #333;
+    font-size: 24px;
+}
+
+
+.submit-container button:hover {
+    background-color: #0056b3;
+}
+
+.search-container {
+    margin-left: 5px;
+    display: flex;
+    white-space: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: -10px;
+    gap: 5px; /* เพิ่มระยะห่างระหว่างช่องค้นหา */
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 15px;
+    
+    display: block;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.submit-button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button {
+    background-color: #e90f2c;
+    color: white;
+    border: none;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    
+    padding: 12px;
+    text-align: left;
+}
+/* หัวตาราง */
+th {
+    background-color: #007bff;
+    
+}
+.ActivityText h1 {
+    font-size: 18px; /* ปรับขนาดตัวอักษรตามต้องการ */
+    line-height: 2.5; /* ปรับระยะห่างระหว่างบรรทัด */
+    margin: 10px 0; /* ปรับระยะห่างระหว่างหัวข้อ */
+}
+
+tr:nth-child(even) {
+    background-color: #f8f9fa;
+}
+
+tr:hover {
+    background-color: #e9ecef;
+}
+
+input[type="checkbox"] {
+    transform: scale(1.2); /* เพิ่มขนาดของช่อง checkbox */
+    margin-right: 10px;
+}
+
+.submit-containerbutton {
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+
+
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+            
+.top-section {
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: #f8f9fa;
+    flex: 1; /* ใช้ flex เพื่อให้กินพื้นที่ครึ่งบน */
+}
+.focus-activities, .customer-summary,.customerActivities {
+    width: 48%;
+    background-color: #ffffff;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.focus-activities, .customer-summary, .customerActivities {
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    padding: 20px;
+    width: 50%;
+}
+
+.chart-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.donut-chart {
+    text-align: center;
+}
+.circle {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #6366F1 0% 40%,         /* สีสำหรับ purchased 40% */
+        #A5B4FC 40% 72%,        /* สีสำหรับ pending 32% */
+        #E0E7FF 72% 100%        /* สีสำหรับ not interested 28% */
+    );
+    margin: 0 auto;
+    position: relative;
+}
+
+.legend {
+    margin-top: 20px;
+}
+
+.dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+
+.legend .dot {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+}
+
+.purchased {
+    background-color: #6366F1;
+}
+
+
+.pending {
+    background-color: #4F46E5;
+}
+
+.not-interested {
+    background-color: #E0E7FF;
+}
+
+.line-chart {
+    position: relative;
+    height: 200px;
+    width: 100%;
+}
+
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination a, .pagination span {
+    padding: 8px 12px;
+    margin: 0 4px;
+    text-decoration: none;
+    background-color: #f4f4f4;
+    border: 1px solid #ddd;
+    color: #333;
+}
+
+.pagination a:hover {
+    background-color: #007bff;
+    color: white;
+}
+
+.pagination .disabled {
+    color: #ccc;
+    cursor: not-allowed;
+}
+
+.pagination .current {
+    font-weight: bold;
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+.customerTable th, .customerTable td {
+    padding: 8px 12px;
+    text-align: left;
+    width: auto; /* ตรวจสอบให้แน่ใจว่า column มีการตั้งค่าความกว้างที่เหมาะสม */
+    border-bottom: 1px solid #ddd;
+}
+
+.customerTable {
+    width: 100%; /* ให้ตารางขยายเต็มหน้าจอ */
+    border-collapse: collapse; /* รวม border */
+}
+
+#customerTable td {
+    white-space: nowrap; /* ป้องกันไม่ให้ข้อความขึ้นบรรทัดใหม่ */
+    overflow: hidden; /* ซ่อนข้อความที่เกินขอบ */
+    text-overflow: ellipsis; /* แสดง ... เมื่อข้อความเกิน */
+    max-width: 200px; /* กำหนดความกว้างสูงสุดของคอลัมน์ */
+}
+
+

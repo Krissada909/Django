@@ -1,0 +1,256 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="th">
+<head>
+
+    <meta charset="UTF-8">
+    <title>รายชื่อลูกค้า</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'myapp/styles.css' %}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+ 
+       
+
+<script>
+    // ฟังก์ชันค้นหาลูกค้าและสถานะ
+    function searchCustomersAndStatus() {
+        const searchForm = document.querySelector('form');
+        searchForm.submit(); // ส่งฟอร์มเพื่อค้นหา
+    }
+
+    
+    function toggleSelectAll(selectAllCheckbox) {
+        const checkboxes = document.querySelectorAll('input[name="customer_id"]');
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+        toggleDeleteButton(); // ตรวจสอบปุ่มลบ
+    }
+
+    function toggleDeleteButton() {
+        const checkboxes = document.querySelectorAll('input[name="customer_id"]');
+        const deleteButton = document.getElementById('deleteButton');
+        const anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+        deleteButton.style.display = anyChecked ? 'block' : 'none'; // แสดง/ซ่อนปุ่มลบ
+    }
+
+    function deleteSelectedCustomers() {
+        const checkboxes = document.querySelectorAll('input[name="customer_id"]:checked');
+        if (checkboxes.length === 0) {
+            alert('กรุณาเลือกลูกค้าอย่างน้อยหนึ่งคนเพื่อลบ');
+            return;
+        }
+
+        // รับค่าที่ ID ของลูกค้าที่เลือก
+        const customerIds = Array.from(checkboxes).map(checkbox => checkbox.value);
+        console.log(customerIds); // ดูว่ามี ID ที่ถูกส่งไปหรือไม่
+
+        if (confirm('คุณแน่ใจว่าต้องการลบลูกค้าเหล่านี้?')) {
+            // ส่งคำขอลบไปยังเซิร์ฟเวอร์
+            fetch('/delete_customers/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken') // ถ้าคุณใช้ Django ให้แน่ใจว่ามี CSRF token
+                },
+                body: JSON.stringify({ ids: customerIds })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('ลบลูกค้าเรียบร้อยแล้ว');
+                    location.reload(); // โหลดหน้าใหม่เพื่ออัปเดตข้อมูล
+                } else {
+                    alert('เกิดข้อผิดพลาดในการลบลูกค้า');
+                }
+            })
+            .catch(error => {
+                console.error('เกิดข้อผิดพลาด:', error);
+                alert('เกิดข้อผิดพลาดในการลบลูกค้า');
+            });
+        }
+    }
+
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // ถ้า cookie นี้เริ่มด้วยชื่อที่เราต้องการ
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+</script>
+
+</head>
+<body>
+    <div class="dashboard">
+        <!-- Top Section -->
+        <div class="top-section">
+            <!-- Focus Activities Section -->
+            <div class="focus-activities">
+               
+                <h2> <i class="fa-regular fa-calendar"></i> Focus Activities (by person)</h2>
+              
+                <div class="ActivityText">
+                    <h1>Activity 1 This is your description. insertyour text here</h1>
+                    <h1>Activity 2 This is your description. insertyour text here</h1>
+                    
+                </div>
+            
+            </div>
+            
+            <!-- Customer Summary Section -->
+            <div class="customer-summary">
+                <h2>Customer Activities Summary</h2>
+                <h3>from Oct - Dec, 2024</h3>
+                <div class="chart-container">
+                   
+                        <div class="chart">
+                            <div class="circle"></div>
+                            <!-- วงกลมที่แสดง Purchased, Pending, Not Interested -->
+                            <div class="legend">
+                                <span class="dot purchased"></span> purchased 40%<br>
+                                <span class="dot pending"></span> pending 32%<br>
+                                <span class="dot not-interested"></span> not interested 28%<br>
+                            </div>
+                        </div>
+                    
+                </div>
+            </div>
+
+                <!-- ส่วนกิจกรรม -->
+            <div class="customerActivities">
+                <h2>Activities</h2>
+                <div class="line-chart">
+                    <h3>as of today, 2024</h3>
+                    <!-- เส้นกราฟที่แสดง purchased และ not interested -->
+                    <canvas id="activityChart"></canvas>
+                    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                    <script>
+                        const ctx = document.getElementById('activityChart').getContext('2d');
+                        const activityChart = new Chart(ctx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                                datasets: [{
+                                    label: 'purchased',
+                                    data: [10, 20, 15, 30],
+                                    borderColor: '#6366F1',
+                                    fill: false
+                                }, {
+                                    label: 'not interested',
+                                    data: [5, 10, 8, 12],
+                                    borderColor: '#E0E7FF',
+                                    fill: false
+                                }]
+                            },
+                            options: {
+                                scales: {
+                                    y: {
+                                        beginAtZero: true
+                                    }
+                                }
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="search-container">
+            <form method="GET" action="">
+                <div class="search-container">
+                    <label for="searchNameInput">ค้นหารายชื่อลูกค้า:</label>
+                    <input type="text" id="searchNameInput" name="search_name" value="{{ request.GET.search_name|default:'' }}" placeholder="ค้นหารายชื่อลูกค้า...">
+            
+                    <label for="searchStatusInput">ค้นหาสถานะ:</label>
+                    <input type="text" id="searchStatusInput" name="search_status" value="{{ request.GET.search_status|default:'' }}" placeholder="ค้นหาสถานะ...">
+            
+                    
+                    <button type="submit" class="submit-button">Submit</button>
+                    <button id="deleteButton" class="delete-button" style="display: none;" onclick="deleteSelectedCustomers()">Delete</button>
+                </div>
+           
+            </form>
+        </div>
+        
+    
+    
+    
+   
+    
+    <div class="bottom-section">
+        <table id="customerTable">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" onclick="toggleSelectAll(this)"> </th> <!-- ช่องติ๊กเลือกทั้งหมด -->
+                    <th>ลำดับ</th> <!-- หัวตารางสำหรับลำดับ -->
+                    <th>ชื่อ</th>
+                    <th>ประเภทธุรกิจ</th>
+                   
+                    <th>ผู้ติดต่อ</th>
+                    <th>เบอร์โทร</th>
+                   
+                    <th>เว็บไซต์</th>
+                    <th>สถานะ</th>
+                    <th>วันที่สถานะ</th>
+                    <th>รับผิดชอบโดย</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for customer in page_obj %}
+                    <tr>
+                        <td><input type="checkbox" name="customer_id" value="{{ customer.customer_id }}" onclick="toggleDeleteButton()"></td>
+                        <td>{{ forloop.counter0|add:page_obj.start_index }}</td> <!-- ลำดับ -->
+                        <td>{{ customer.customer_name }}</td>
+                        <td>{{ customer.business_type }}</td>
+                        <td>{{ customer.contact_person }}</td>
+                        <td>{{ customer.phone_number }}</td>
+                        <td><a href="{{ customer.website }}" target="_blank">Web</a></td>
+                        <td>{{ customer.status }}</td>
+                        <td>{{ customer.date_of_status }}</td>
+                        <td>{{ customer.responsible_by }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="10" style="text-align: center;">ไม่มีข้อมูลลูกค้า</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="pagination">
+        <span>หน้า {{ page_obj.number }} จาก {{ page_obj.paginator.num_pages }}</span>
+        
+        {% if page_obj.has_previous %}
+            <a href="?page=1&search_name={{ request.GET.search_name|default:'' }}&search_status={{ request.GET.search_status|default:'' }}">หน้าแรก</a>
+            <a href="?page={{ page_obj.previous_page_number }}&search_name={{ request.GET.search_name|default:'' }}&search_status={{ request.GET.search_status|default:'' }}">หน้าก่อนหน้า</a>
+        {% endif %}
+    
+        {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+                <span class="current">{{ num }}</span>
+            {% elif num > page_obj.number|add:-3 and num < page_obj.number|add:3 %}
+                <a href="?page={{ num }}&search_name={{ request.GET.search_name|default:'' }}&search_status={{ request.GET.search_status|default:'' }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+    
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}&search_name={{ request.GET.search_name|default:'' }}&search_status={{ request.GET.search_status|default:'' }}">หน้าถัดไป</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}&search_name={{ request.GET.search_name|default:'' }}&search_status={{ request.GET.search_status|default:'' }}">หน้าสุดท้าย</a>
+        {% endif %}
+    </div>
+    
+
+</div>
+</body>
+</html>
